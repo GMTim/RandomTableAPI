@@ -35,6 +35,7 @@ const DirectoryScan = (directoryPath, handler) => {
         const filesAndDirectories = fs.readdirSync(directoryPath)
         let data = new Set()
         filesAndDirectories.forEach(fileOrDirectory => {
+            if (fileOrDirectory.startsWith(".")) { return }
             const fullPath = path.join(directoryPath, fileOrDirectory)
             const isDir = fs.statSync(fullPath).isDirectory()
             const rd = handler(fullPath, isDir)

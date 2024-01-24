@@ -6,8 +6,8 @@ import DataReader from "../dataReader.js"
  */
 const table = (req, res) => {
     const dr = new DataReader()
-    let table = dr.readTable(req.params.gameId, req.params.tableId)
-    res.send(table)
+    let data = dr.readTable(req.params.gameId, req.params.tableId)
+    res.send(data.table)
 }
 
 export default table

@@ -10,7 +10,7 @@
 
 /**
  * @typedef {Object} Models.TableEntry
- * @property {Range} range - The range for this entry.
+ * @property {Models.Range} range - The range for this entry.
  * @property {string} value - The value associated with this entry.
  */
 
@@ -18,8 +18,8 @@
  * @typedef {Object} Models.Table
  * @property {string} id - The unique identifier of the table.
  * @property {string} name - The name of the table.
- * @property {Range} range - The overall range of the table.
- * @property {TableEntry[]} entries - An array of entries within the table.
+ * @property {Models.Range} range - The overall range of the table.
+ * @property {Models.TableEntry[]} entries - An array of entries within the table.
  */
 
 /**

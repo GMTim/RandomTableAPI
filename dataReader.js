@@ -112,7 +112,7 @@ class DataReader {
         if (!game) { return }
         const tableList = this.readTableList(gameId)
         if (!tableList.find(table => table.id == tableId)) { return }
-        return LoadFile(path.join(game.path, `table-${tableId}.json`))
+        return {game: game, table: LoadFile(path.join(game.path, `table-${tableId}.json`))}
     }
 }
 

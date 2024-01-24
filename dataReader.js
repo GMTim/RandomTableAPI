@@ -3,17 +3,19 @@ import path from "path"
 import Constants from "./constants.js"
 
 /**
- * Game Information
- * @typedef {Object} readGameInfo
- * @property {string} id - The unique identifier of the game.
- * @property {string} name - The name of the game.
+ * @typedef {import('./models.js').Models} Models
  */
 
 /**
- * Game Information
  * @typedef {Object} GameData
  * @property {string} path - Location of the game.
- * @property {GameInfo} info - Info about the game.
+ * @property {Models.GameInfo} info - Info about the game.
+ */
+
+/**
+ * @typedef {Object} TableData
+ * @property {GameData} game
+ * @property {Models.Table} table
  */
 
 /**
@@ -26,7 +28,7 @@ import Constants from "./constants.js"
 /**
  * @param {string} directoryPath 
  * @param {ScanCallback} handler 
- * @returns 
+ * @returns {Set}
  */
 const DirectoryScan = (directoryPath, handler) => {
     try {
@@ -46,9 +48,18 @@ const DirectoryScan = (directoryPath, handler) => {
         return
     }
 }
+const LoadFile = (file) => {
+    try {
+        const fileData = fs.readFileSync(file)
+        return JSON.parse(fileData)
+    } catch (error) {
+        console.error('Missing data:', error)
+        return
+    }
+}
 
 class DataReader {
-    /** @type {GameData[]} */
+    /** @type {Set<GameData>} */
     games
 
     constructor(directoryPath) {
@@ -72,14 +83,36 @@ class DataReader {
      * @returns {GameInfo}
      */
     readGameInfo(dir) {
-        try {
-            let file = path.join(dir, "game.json")
-            const fileData = fs.readFileSync(file)
-            return JSON.parse(fileData)
-        } catch (error) {
-            console.error('Missing game data:', error)
-            return
-        }
+        return LoadFile(path.join(dir, "game.json"))
+    }
+    /**
+     * @param {string} gameId 
+     * @returns {GameData}
+     */
+    find(gameId) {
+        const gameList = Array.from(this.games)
+        return gameList.find(game => game.info.id === gameId )
+    }
+    /**
+     * @param {string} gameId 
+     * @returns {Models.TableListEntry[]}
+     */
+    readTableList(gameId) {
+        const game = this.find(gameId)
+        if (!game) { return }
+        return LoadFile(path.join(game.path, "tables.json"))
+    }
+    /**
+     * @param {string} gameId
+     * @param {string} tableID
+     * @returns {TableData}
+     */
+    readTable(gameId, tableId) {
+        const game = this.find(gameId)
+        if (!game) { return }
+        const tableList = this.readTableList(gameId)
+        if (!tableList.find(table => table.id == tableId)) { return }
+        return LoadFile(path.join(game.path, `table-${tableId}.json`))
     }
 }
 

@@ -12,6 +12,8 @@ const app = express()
 app.use(cors())
 app.use(middleware.apiKey)
 app.get("/games", apis.games)
+app.get("/tables/:gameId", apis.tables)
+app.get("/table/:gameId/:tableId", apis.table)
 
 app.listen(PORT, () => {
     console.log(`API is listening on http://localhost:${PORT}`)

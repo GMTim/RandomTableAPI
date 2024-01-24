@@ -6,7 +6,7 @@ import DataReader from "../dataReader.js"
  */
 const tables = (req, res) => {
     const dr = new DataReader()
-    let tables = dr.readTableList(req.params.gameId)
+    let tables = dr.readTableList(req.params.gameId) ?? []
     res.send(tables)
 }
 

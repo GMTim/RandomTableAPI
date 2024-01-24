@@ -12,7 +12,12 @@ function getRandomNumber(min, max) {
  */
 const table = (req, res) => {
     const dr = new DataReader()
-    const table = dr.readTable(req.params.gameId, req.params.tableId).table
+    const data = dr.readTable(req.params.gameId, req.params.tableId)
+    if (!data || !data.table) {
+        res.status(404).send({error: "Missing Game Or Table"})
+        return
+    }
+    const table = data.table
     const random = getRandomNumber(table.range.low, table.range.high)
     const entry = table.entries.find(e => e.range.low <= random && e.range.high >= random)
     res.send({roll: random, entry: entry})
